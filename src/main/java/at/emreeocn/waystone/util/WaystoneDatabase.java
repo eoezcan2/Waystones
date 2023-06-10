@@ -1,10 +1,15 @@
 package at.emreeocn.waystone.util;
 
+import at.emreeocn.waystone.WaystonePlugin;
 import at.emreeocn.waystone.model.Waystone;
+import at.emreeocn.waystone.model.WaystoneStore;
+import at.emreeocn.waystone.model.WaystoneStruct;
+import com.google.gson.Gson;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
+import javax.xml.crypto.Data;
+import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -12,19 +17,32 @@ import java.util.UUID;
 public class WaystoneDatabase {
 
     private File file;
-    private YamlConfiguration db;
+    private WaystoneStruct gson;
 
-    public WaystoneDatabase() throws IOException {
-        file = new File("plugins/Waystone", "waystones.yml");
-        if(!file.exists()) file.getParentFile().createNewFile();
-        db = YamlConfiguration.loadConfiguration(file);
+    public WaystoneDatabase() {
+        try {
+            if(!WaystonePlugin.getInstance().getDataFolder().exists()) WaystonePlugin.getInstance().getDataFolder().mkdir();
+            file = new File(WaystonePlugin.getInstance().getDataFolder(), "waystones.json");
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+            gson = loadGson();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void saveWaystone(Waystone waystone) {
-
+    private WaystoneStruct loadGson() throws FileNotFoundException {
+        Gson gson = new Gson();
+        Reader reader = new FileReader(file);
+        return gson.fromJson(reader, WaystoneStruct.class);
     }
 
-    public void loadWaystonesFromDB() {
+    public void saveGson() throws IOException {
+        Writer writer = new FileWriter(file);
+        Gson gson = new Gson();
+        gson.toJson(this.gson, writer);
+        writer.close();
     }
 
 }

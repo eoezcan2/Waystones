@@ -1,4 +1,5 @@
 name: Waystones
 version: 1.0
 author: Emreeocn
-main: com.emreeocn.WaystonePlugin
+main: at.emreeocn.waystone.WaystonePlugin
+api-version: 1.19

@@ -1,1 +1,8 @@
 max-waystones: 4
+
+message-successful-teleport: '&aYou have been teleported to &e%waystone%&a.'
+message-successful-create: '&aYou have created a new waystone called &e%waystone%&a.'
+message-create-name: '&aWhat would you like to name your new waystone?'
+
+item-name: "&6Waystone"
+item-description: "&7Set a waystone and teleport to other waystones"

@@ -19,12 +19,15 @@ repositories {
         }
     }
 
+    maven { url "https://jitpack.io" }
+
     maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url = 'https://oss.sonatype.org/content/repositories/central' }
 }
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT' // The Spigot API with no shadowing. Requires the OSS repo.
+    compileOnly 'com.github.SamJakob:SpiGUI:v1.3'
 }
 
 test {
