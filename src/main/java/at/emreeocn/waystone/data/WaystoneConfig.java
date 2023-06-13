@@ -1,10 +1,7 @@
-package at.emreeocn.waystone.util;
+package at.emreeocn.waystone.data;
 
 import at.emreeocn.waystone.WaystonePlugin;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
 
 public class WaystoneConfig {
 

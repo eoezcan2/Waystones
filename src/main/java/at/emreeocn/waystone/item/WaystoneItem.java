@@ -1,20 +1,20 @@
 package at.emreeocn.waystone.item;
 
-import at.emreeocn.waystone.util.WaystoneConfig;
+import at.emreeocn.waystone.data.WaystoneConfig;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class WaystoneItem extends ItemStack {
 
-    public static final Material MATERIAL = Material.REINFORCED_DEEPSLATE;
+    public static final Material[] MATERIALS = {Material.STONE_BRICK_SLAB, Material.BEACON, Material.CHISELED_STONE_BRICKS, Material.POLISHED_BLACKSTONE_BUTTON};
+    public static final Material MATERIAL = Material.BEACON;
 
     public WaystoneItem() {
-        super(Material.REINFORCED_DEEPSLATE, 1);
+        super(MATERIAL, 1);
 
         ItemMeta meta = getItemMeta();
         meta.setDisplayName(WaystoneConfig.getString("item-name"));
@@ -36,5 +36,17 @@ public class WaystoneItem extends ItemStack {
         recipe.setIngredient('D', Material.OBSIDIAN);
         return recipe;
     }
+
+    public static boolean is(ItemStack item) {
+        if (item.getType() != MATERIAL) return false;
+        if (!new WaystoneItem().getItemMeta().equals(item.getItemMeta())) return false;
+        return true;
+    }
+
+    public static boolean materialEquals(Material material) {
+        return material == MATERIAL;
+    }
+
+
 
 }

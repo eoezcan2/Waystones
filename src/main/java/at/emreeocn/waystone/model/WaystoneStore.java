@@ -1,10 +1,13 @@
 package at.emreeocn.waystone.model;
 
 import at.emreeocn.waystone.WaystonePlugin;
-import at.emreeocn.waystone.util.WaystoneDatabase;
+import at.emreeocn.waystone.data.WaystoneConfig;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,18 +18,15 @@ public class WaystoneStore {
 
     public WaystoneStore(UUID player, Set<Waystone> waystones) {
         this.player = player;
-        loadWaystones();
-    }
-
-    private void loadWaystones() {
-        this.waystones = WaystonePlugin.getInstance().getDatabase().getWaystones(player);
+        this.waystones = waystones;
     }
 
     public boolean addWaystone(Waystone waystone) {
         if (waystones.contains(waystone)) return false;
-        if (waystones.stream().anyMatch(waystone1 -> waystone1.getName().equalsIgnoreCase(waystone.getName()))) return false;
+        if (waystones.stream().anyMatch(waystone1 -> waystone1.getName() != null && waystone1.getName().equalsIgnoreCase(waystone.getName())))
+            return false;
+        if(waystones.size() >= WaystoneConfig.getMaxWaystones()) return false;
         waystones.add(waystone);
-        WaystonePlugin.getInstance().getDatabase().saveWaystone(waystone);
         return true;
     }
 
@@ -49,5 +49,4 @@ public class WaystoneStore {
     public boolean contains(Waystone waystone) {
         return waystones.contains(waystone);
     }
-
 }

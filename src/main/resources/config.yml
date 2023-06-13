@@ -1,8 +1,17 @@
 max-waystones: 4
 
+message-error: '&cAn error occurred in the Waystone Plugin.'
 message-successful-teleport: '&aYou have been teleported to &e%waystone%&a.'
 message-successful-create: '&aYou have created a new waystone called &e%waystone%&a.'
 message-create-name: '&aWhat would you like to name your new waystone?'
+message-create-already: '&cYou are already creating a waystone.'
+message-create-fail: '&cCould not create waystone, please check name or maximum waystones of &e%max-waystones%&c.'
+message-break-fail: '&cYou cannot break this waystone.'
+message-create-name-too-long: '&cYour waystone name is too long (less than 16).'
+message-successful-delete: '&4You have deleted the waystone &e%waystone%&4.'
+
+teleport-sound: ENTITY_ENDERMAN_TELEPORT
+teleport-particle: END_ROD
 
 item-name: "&6Waystone"
 item-description: "&7Set a waystone and teleport to other waystones"

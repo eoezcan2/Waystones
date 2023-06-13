@@ -1,49 +1,92 @@
 package at.emreeocn.waystone.gui;
 
-import at.emreeocn.waystone.WaystonePlugin;
-import at.emreeocn.waystone.item.WaystoneItem;
+import at.emreeocn.waystone.gui.lib.GUI;
+import at.emreeocn.waystone.gui.lib.ItemIcon;
 import at.emreeocn.waystone.model.Waystone;
-import at.emreeocn.waystone.model.WaystoneStore;
-import at.emreeocn.waystone.util.WaystoneAPI;
-import com.samjakob.spigui.buttons.SGButton;
-import com.samjakob.spigui.menu.SGMenu;
+import at.emreeocn.waystone.data.WaystoneAPI;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.UUID;
+import java.util.Arrays;
 
-public class WaystoneMenu {
+public class WaystoneMenu extends GUI {
 
-    private UUID uuid;
-    private SGMenu menu;
+    private final Player player;
+    private final Waystone current;
 
-    public WaystoneMenu(UUID uuid) {
-        this.uuid = uuid;
-        this.menu = WaystonePlugin.getInstance().getGui().create("Waystones", 36);
+    public WaystoneMenu(Player player, Waystone current) {
+        super("Waystones", 9*6);
+        this.player = player;
+        this.current = current;
 
-        // GET WAYSTONES
-        WaystoneStore waystoneStore = WaystoneAPI.getWaystoneStore(uuid);
-
-        // ADD BUTTON FOR EVERY WAYSTONE
-        int i = 0;
         int slot = 0;
-        for(Waystone w : waystoneStore.getWaystones()) {
-            SGButton button = new SGButton(waystoneItem(w, i))
-                    .withListener((InventoryClickEvent event) -> {
-                       if(event.getCurrentItem() == null) return;
-                    });
+        for (Waystone w : WaystoneAPI.getAllWaystones()) {
+            if (!w.isPublic() && !(w.getPlayer().equals(player.getUniqueId()))) continue;
+            ItemIcon icon = new ItemIcon(waystoneItem(w));
+            icon.addClickAction((p, event) -> {
+                if (event.isLeftClick()) {
+                    if(w == current) return;
+                    p.closeInventory();
+                    w.teleport(p);
+                }
 
-            menu.setButton(slot, button);
-            slot+=2;
+                if (event.isRightClick()) {
+                    if(w.getPlayer().equals(p.getUniqueId())) {
+                        p.openInventory(new WaystoneDetailMenu(p.getUniqueId(), w).getInventory());
+                        return;
+                    } else {
+                        return;
+                    }
+                }
+
+                p.closeInventory();
+            });
+            setIcon(slot, icon);
+
+            slot++;
+        }
+
+        fillBlank();
+    }
+
+    private void fillBlank() {
+        for (int i = 0; i < getInventory().getSize(); i++) {
+            if (getIcon(i) == null) {
+                setIcon(i, new ItemIcon(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1)));
+            }
         }
     }
 
-    private static ItemStack waystoneItem(Waystone waystone, int i) {
-        return new ItemStack(Material.STONE, i);
+    private ItemStack waystoneItem(Waystone waystone) {
+        ItemStack item = new ItemStack(waystone.getIcon());
+
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.GOLD + waystone.getName());
+
+        String owner = "";
+        if(Bukkit.getPlayer(waystone.getPlayer()) == null) {
+            owner = Bukkit.getOfflinePlayer(waystone.getPlayer()).getName();
+        } else {
+            owner = Bukkit.getPlayer(waystone.getPlayer()).getDisplayName();
+        }
+
+        boolean isOwner = this.current.getPlayer().equals(waystone.getPlayer());
+
+        String[] lore = {
+                "",
+                ChatColor.GRAY + "Owner: " + ChatColor.DARK_GRAY + owner,
+                isOwner ? ChatColor.GRAY + "Rightclick to view" : "",
+        };
+
+        meta.setLore(Arrays.asList(lore));
+
+        item.setItemMeta(meta);
+
+        return item;
     }
 
-    public SGMenu getMenu() {
-        return menu;
-    }
 }

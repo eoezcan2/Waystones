@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'at.emreeocn'
+group = 'at.emreeocn.waystone'
 version = '1.0-SNAPSHOT'
 
 repositories {
@@ -26,8 +26,12 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT' // The Spigot API with no shadowing. Requires the OSS repo.
-    compileOnly 'com.github.SamJakob:SpiGUI:v1.3'
+    // JUNIT
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
+    compileOnly 'com.googlecode.json-simple:json-simple:1.1.1'
+    // The Spigot API with no shadowing. Requires the OSS repo.
+    // compileOnly 'com.github.overmighty:croissant:1.0.2'
 }
 
 test {
